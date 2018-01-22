@@ -1,4 +1,4 @@
-## 开始Coding与版本控制器（VC）集成
+## solo workflow
 
 Coding粗犷de来说可以分成下面几个阶段：
 
@@ -96,7 +96,7 @@ create foo
 有了新的需求，我们就可以根据需求来创建新的分支来经行开发。首先要做的就是要签出一个分支：
 
 ```sh
-git checkout -b feature-4-add-dashboard-page
+git checkout -b feat-4-add-dashboard-page
 ```
 
 除了功能分支外，还有一种常见的分支就是补丁分支（hotfix）。
@@ -104,10 +104,10 @@ git checkout -b feature-4-add-dashboard-page
 分支名称的描述规则是：
 
 ```
-[feat|fix]-ID-<TITLE>
+[feat|fix]-ID<-TITLE>
 ```
 
-> 如果是团队协作，这里可以指定一个该功能负责人并签给他。更cool的是可以用机器人来自动签发任务到指定负责人身上
+> 如果是团队协作，这里可以指定一个该功能负责人并签给他。更cool的是可以用机器人来自动签发任务到指定负责人身上。不过solo的话似乎也不太需要，因为做什么都是自己 :)
 
 
 这样我们就可以根据具体的需求描述来实现逻辑。

@@ -45,7 +45,7 @@ node -r @babel/register
 
 效果也是一样的。:)
 
-对于ESM来说，这里主要用到一个babel插件，那就是`@babel/plugin-transform-modules-commonjs`。但令人崩溃的是，如果我们准备开发一个web app而用到了webpack，webpack需求babel把modules设置为false（好巧webpack也是一个ESM resolver，就是说webpack要自己去解决依赖问题），那么ESM的配置就相当于无效。
+对于ESM，这里主要用到的一个babel插件，那就是`@babel/plugin-transform-modules-commonjs`。但令人崩溃的是，如果我们准备开发一个web app而用到了webpack，webpack需求babel把modules设置为false（好巧webpack也是一个ESM resolver，就是说webpack要自己去解决依赖问题，rollup同理），那么ESM的配置就相当于无效了。
 
 这里有个做法是设置一个专用的ENV flag，比如`script`。babel会先找有没有设置`BABEL_ENV`，如果没有，就去寻找`NODE_ENV`作为当前环境。所以需要重新配置一个script的env：
 
@@ -67,6 +67,71 @@ node -r @babel/register
 }
 ```
 
+### babel 实用插件
+
+#### @babel/plugin-proposal-object-rest-spread
+
+最常用，没有之一。用于编译下面的语法：
+
+```js
+{
+   ...foo,
+   bar: 42
+}
+```
+
+这里有一个选项是`useBuiltins`。如果设为true，他会直接用Object.assign来代替：
+
+```js
+// output
+Object.assign(foo, { bar: 42 })
+```
+
+这就是说如果你的target支持Object.assign的话，把这个选项设为true就比较合适，当然不支持的话，他会用一个helper来代替`_extends(foo, { bar: 42 })`
+
+
+#### @babel/plugin-proposal-class-properties
+
+这个也比较常用一些，尤其是在开发react app的时候。用于编译下面的语法：
+
+```js
+class Foo {
+  bar = 42
+  baz = () => {}
+}
+```
+
+同样他有一个loose mode：
+
+```js
+// { loose: true }
+var Foo = function Foo() {
+  this.bar = 42
+  this.baz = function baz() {}
+}
+
+// { loose: false }
+var Foo = function Foo() {
+  Object.defineProperty(this, "bar", {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    value: 42
+  })
+  Object.defineProperty(this, "baz", {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    value: function baz() {}
+  })
+}
+```
+
+> loose mode继承自preset-env
+
+#### @babel/plugin-syntax-dynamic-import
+
+对webpack来说，这个插件就很重要了，理由是import()在webpack里面被用来切割代码。
 
 ### 通用配置文件
 
@@ -116,3 +181,4 @@ node -r @babel/register
 ### Awesomes
 
 - [@std/esm](https://github.com/standard-things/esm)
+- [loose-mode](http://2ality.com/2015/12/babel6-loose-mode.html)
