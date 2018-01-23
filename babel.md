@@ -133,6 +133,8 @@ var Foo = function Foo() {
 
 对webpack来说，这个插件就很重要了，理由是import()在webpack里面被用来切割代码。
 
+
+
 ### 通用配置文件
 
 ```js
@@ -181,4 +183,6 @@ var Foo = function Foo() {
 ### Awesomes
 
 - [@std/esm](https://github.com/standard-things/esm)
-- [loose-mode](http://2ality.com/2015/12/babel6-loose-mode.html)
+- [loose mode](http://2ality.com/2015/12/babel6-loose-mode.html)
+- [ES2015 & 2016 Features meta-issue](https://github.com/facebook/flow/issues/560)
+- [es6 modules in depth](https://ponyfoo.com/articles/es6-modules-in-depth)
