@@ -2,6 +2,7 @@
 
 - ModuleBuildError
 - ModuleNotFoundError
+- EntryModuleNotFoundError
 
 ### ModuleBuildError
 
@@ -45,7 +46,7 @@ interface ModuleNotFoundError {
 }
 ```
 
-简单理解，没找到模块。从接口中可以看到missing，这是一个有用的属性，他标识了webpack从哪里寻找这个模块。比如一个模块foo，引入这个模块的文件是`path/to/src/index.js`，那missing可能就是：
+简单理解就是没找到模块。从接口中可以看到missing，这是一个有用的属性，他标识了webpack从哪里寻找这个模块。比如一个模块foo，引入这个模块的文件是`path/to/src/index.js`，那missing可能就是：
 
 ```js
 [
@@ -93,6 +94,34 @@ node_modules的搜索规则是，搜索当前下面的，没找到就一层层的向上递归去找。所以文件
 如果是说没找到文件，那通常也是会出现两种情况，第三方依赖包，比如react，jquery这些；自己写的文件但失误写错了路径。
 
 对于第一种情况，第三方依赖确实，最直接的办法就是安装呗，可以试试`AutoInstallPlugin()`；后面一种手误的话就比较棘手了，可以根据正则来筛选项目下面文件名相似的文件。
+
+
+### EntryModuleNotFoundError
+
+这个错误是最简单的一个，意思是没有找到入口模块，大多数情况就发生在配置entry处。除了写错路径外，下面的做法，就会出现这个错误：
+
+```js
+{
+  entry: 'index.js'
+}
+```
+
+前面的ModuleNotFound也提到了，这会变成一个module而去node_modules里面找，如果恰好安装了一个叫做`index.js`的库，那……。改成：
+
+```js
+{
+  entry: ./'index.js'
+}
+```
+
+推荐的做法是将entry处理成一个绝对路径：
+
+```js
+{
+  entry: path.resolve('index.js')
+}
+```
+
 
 ### Awesomes
 
